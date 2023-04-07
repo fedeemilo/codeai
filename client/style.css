@@ -1,14 +1,20 @@
-@import url("https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@100;300;400;500;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@100;300;400;500;700;800;900&display=swap');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Alegreya Sans", sans-serif;
+    font-family: 'Alegreya Sans', sans-serif;
 }
 
 body {
     background: #343541;
+}
+
+#title {
+    font-size: 2.4rem;
+    margin: 0.5rem 0 0 0;
+    color: #dcdcdc;
 }
 
 #app {
@@ -94,6 +100,7 @@ body {
 
     max-width: 100%;
     overflow-x: scroll;
+    margin: auto;
 
     /*
    * white space refers to any spaces, tabs, or newline characters that are used to format the CSS code

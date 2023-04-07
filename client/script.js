@@ -3,8 +3,37 @@ import user from './assets/user.svg'
 
 const form = document.querySelector('form')
 const chatContainer = document.querySelector('#chat_container')
+const promptElement = document.querySelector('textarea')
 
 let loadInterval
+
+function highlightKeywords(text) {
+    const keywords = [
+        'if',
+        'else',
+        'for',
+        'while',
+        'switch',
+        'case',
+        'break',
+        'continue',
+        'return',
+        'function',
+        'class',
+        'const',
+        'let',
+        'var'
+    ]
+    const words = text.split(' ')
+    const highlightedWords = words.map(word => {
+        if (keywords.includes(word)) {
+            return `<span class="keyword">${word}</span>`
+        } else {
+            return word
+        }
+    })
+    return highlightedWords.join(' ')
+}
 
 function loader(element) {
     element.textContent = ''
@@ -18,7 +47,23 @@ function loader(element) {
     }, 300)
 }
 
-function typeText(element, text) {
+function typeCodeText(element, text) {
+    let index = 0
+
+    let interval = setInterval(() => {
+        if (index < text.length) {
+            element.innerHTML += text.charAt(index)
+            index++
+            element.innerHTML = highlightKeywords(element.innerText)
+        } else {
+            clearInterval(interval)
+            element.innerHTML = highlightKeywords(element.innerText)
+            hljs.highlightBlock(element)
+        }
+    }, 20)
+}
+
+function typeRegularText(element, text) {
     let index = 0
 
     let interval = setInterval(() => {
@@ -59,9 +104,18 @@ const handleSubmit = async e => {
     e.preventDefault()
 
     const data = new FormData(form)
+    const prompt = data.get('prompt')
+
+    if (prompt.includes('clear')) {
+        chatContainer.innerHTML += chatStripe(true, prompt)
+        chatContainer.innerHTML = ''
+        form.reset()
+        promptElement.focus()
+        return
+    }
 
     // user's chatstripe
-    chatContainer.innerHTML += chatStripe(false, data.get('prompt'))
+    chatContainer.innerHTML += chatStripe(false, prompt)
 
     form.reset()
 
@@ -82,9 +136,18 @@ const handleSubmit = async e => {
             'Content-type': 'application/json'
         },
         body: JSON.stringify({
-            prompt: data.get('prompt')
+            prompt
         })
     })
+
+    function isCode(text) {
+        try {
+            acorn.parse(text)
+            return true
+        } catch (e) {
+            return false
+        }
+    }
 
     clearInterval(loadInterval)
     messageDiv.innerHTML = ' '
@@ -93,7 +156,17 @@ const handleSubmit = async e => {
         const data = await response.json()
         const parsedData = data.bot.trim()
 
-        typeText(messageDiv, parsedData)
+        if (isCode(parsedData)) {
+            const codeContainer = document.createElement('code')
+            codeContainer.innerHTML = parsedData
+            messageDiv.innerHTML = ''
+
+            messageDiv.classList.add('hljs')
+
+            typeCodeText(messageDiv, parsedData)
+        } else {
+            typeRegularText(messageDiv, parsedData)
+        }
     } else {
         const err = await response.text()
 
@@ -106,5 +179,12 @@ form.addEventListener('submit', handleSubmit)
 form.addEventListener('keyup', e => {
     if (e.keyCode === 13) {
         handleSubmit(e)
+    }
+})
+form.addEventListener('keydown', event => {
+    if (event.ctrlKey && event.key === 'l') {
+        chatContainer.innerHTML += chatStripe(true, prompt)
+        chatContainer.innerHTML = ''
+        form.reset()
     }
 })
