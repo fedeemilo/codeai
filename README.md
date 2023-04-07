@@ -1,7 +1,7 @@
 # Codeai
 
 ```
-Live demo: [https://codeai-mu.vercel.app](https://codeai-mu.vercel.app)
+[Live Demo](https://codeai-mu.vercel.app)
 ```
 
 ## Installation
