@@ -143,6 +143,17 @@ body {
     margin-bottom: 1rem;
 }
 
+.nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.nav img {
+    width: 2.3rem;
+    margin-right: 0.7rem;
+}
+
 form {
     width: 98%;
     max-width: 1280px;
