@@ -119,6 +119,24 @@ body {
     grid-auto-flow: row dense;
 }
 
+@media (min-width: 480px) {
+    .generated-imgs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .generated-imgs {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .generated-imgs {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
 .img-gen {
     border: 6px solid #343541;
     border-radius: 4px;

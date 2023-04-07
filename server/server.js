@@ -4,12 +4,26 @@ import cors from 'cors'
 import { Configuration, OpenAIApi } from 'openai'
 
 dotenv.config()
+const PORT = process.env.PORT
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY
 })
 
 const openai = new OpenAIApi(configuration)
+
+const nImagesObj = {
+    ':one': 1,
+    ':two': 2,
+    ':three': 3,
+    ':four': 4,
+    ':five': 5,
+    ':six': 6,
+    ':seven': 7,
+    ':eight': 8,
+    ':nine': 9,
+    ':ten': 10
+}
 
 const app = express()
 app.use(cors())
@@ -25,12 +39,17 @@ app.get('/', async (req, res) => {
 app.post('/', async (req, res) => {
     try {
         const prompt = req.body.prompt.toLowerCase()
+        const splittedPrompt = prompt.split(':')
         let response
+        let nImages
 
-        if (prompt.includes('img:')) {
+        if (splittedPrompt.includes('img')) {
+            if (nImagesObj[`:${splittedPrompt[1]}`]) {
+                nImages = nImagesObj[`:${splittedPrompt[1]}`]
+            }
             response = await openai.createImage({
-                prompt: prompt.replace('img:', ''),
-                n: 8,
+                prompt: splittedPrompt[splittedPrompt.length - 1],
+                n: nImages || 4,
                 size: '256x256'
             })
 
@@ -58,6 +77,4 @@ app.post('/', async (req, res) => {
     }
 })
 
-app.listen(5000, () =>
-    console.log('Server is running on port http://localhost:5000')
-)
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))

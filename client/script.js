@@ -28,7 +28,6 @@ function highlightKeywords(text) {
     const words = text.split(' ')
     const highlightedWords = words.map(word => {
         if (keywords.includes(word)) {
-            console.log('includes!')
             return `<span class="keyword">${word}</span>`
         } else {
             return word
@@ -137,7 +136,7 @@ const handleSubmit = async e => {
 
     // fetch data from server -> bot's response
     // http://localhost:5000 || https://codeai-5wxe.onrender.com
-    const response = await fetch('https://codeai-5wxe.onrender.com', {
+    const response = await fetch('http://localhost:5000', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
