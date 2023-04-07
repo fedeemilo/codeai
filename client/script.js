@@ -133,7 +133,7 @@ const handleSubmit = async e => {
 
     // fetch data from server -> bot's response
     // http://localhost:5000 || https://codeai-5wxe.onrender.com
-    const response = await fetch('http://localhost:5000', {
+    const response = await fetch('https://codeai-5wxe.onrender.com', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
