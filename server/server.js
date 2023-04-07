@@ -24,10 +24,10 @@ app.get('/', async (req, res) => {
 
 app.post('/', async (req, res) => {
     try {
-        const prompt = req.body.prompt
+        const prompt = req.body.prompt.toLowerCase()
         let response
 
-        if (prompt.toLowerCase().includes('img:')) {
+        if (prompt.includes('img:')) {
             response = await openai.createImage({
                 prompt: prompt.replace('img:', ''),
                 n: 8,

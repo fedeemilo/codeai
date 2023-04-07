@@ -55,6 +55,8 @@ function typeCodeText(element, text) {
     let interval = setInterval(() => {
         if (index < text.length) {
             element.innerHTML += text.charAt(index)
+            chatContainer.scrollTop =
+                chatContainer.scrollHeight + element.scrollHeight
             index++
             element.innerHTML = highlightKeywords(element.innerText)
         } else {
@@ -71,6 +73,8 @@ function typeRegularText(element, text) {
     let interval = setInterval(() => {
         if (index < text.length) {
             element.innerHTML += text.charAt(index)
+            chatContainer.scrollTop =
+                chatContainer.scrollHeight + element.scrollHeight
             index++
         } else {
             clearInterval(interval)
@@ -158,7 +162,20 @@ const handleSubmit = async e => {
     if (response.ok) {
         if (prompt.includes('img:')) {
             const imgRes = await response.json()
-            console.log(imgRes)
+
+            // Create an array of promises that resolve when the images are loaded
+            const imgPromises = imgRes.bot.map(imgData => {
+                const img = new Image()
+                img.src = imgData.url
+                return new Promise(resolve => {
+                    img.onload = () => resolve(img)
+                })
+            })
+
+            // Wait for all images to be loaded before setting the scroll position
+            Promise.all(imgPromises).then(() => {
+                chatContainer.scrollTop = chatContainer.scrollHeight
+            })
 
             for (let i = 0; i < imgRes.bot.length; i++) {
                 const img = document.createElement('img')
@@ -188,9 +205,8 @@ const handleSubmit = async e => {
         }
     } else {
         const err = await response.text()
-
+        console.log(err)
         messageDiv.innerHTML = 'Something went wrong'
-        alert(err)
     }
 }
 
