@@ -27,7 +27,7 @@ app.post('/', async (req, res) => {
         const prompt = req.body.prompt
         let response
 
-        if (prompt.includes('img:')) {
+        if (prompt.toLowerCase().includes('img:')) {
             response = await openai.createImage({
                 prompt: prompt.replace('img:', ''),
                 n: 8,
@@ -57,8 +57,6 @@ app.post('/', async (req, res) => {
         res.status(500).send({ error })
     }
 })
-
-app.post('/image', (req, res) => {})
 
 app.listen(5000, () =>
     console.log('Server is running on port http://localhost:5000')
