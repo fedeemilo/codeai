@@ -57,7 +57,7 @@ app.post('/', async (req, res) => {
             }
             response = await openai.createImage({
                 prompt: splittedPrompt[splittedPrompt.length - 1],
-                n: nImages || 4,
+                n: nImages || 8,
                 size: '256x256'
             })
 
