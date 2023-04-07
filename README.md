@@ -1,7 +1,7 @@
 # Codeai
 
 ```
-Live demo: https://codeai-mu.vercel.app/
+Live demo: [https://codeai-mu.vercel.app](https://codeai-mu.vercel.app)
 ```
 
 ## Installation
@@ -18,6 +18,13 @@ Live demo: https://codeai-mu.vercel.app/
 -   cd server
 -   npm i
 -   npm run server
+
+## Docs
+
+```
+clear | CTRL + L = Clean page
+img: = image generator
+```
 
 ## Example
 
