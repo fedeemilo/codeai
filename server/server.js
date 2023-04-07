@@ -1,7 +1,7 @@
-import express from "express"
-import * as dotenv from "dotenv"
-import cors from "cors"
-import { Configuration, OpenAIApi } from "openai"
+import express from 'express'
+import * as dotenv from 'dotenv'
+import cors from 'cors'
+import { Configuration, OpenAIApi } from 'openai'
 
 dotenv.config()
 
@@ -15,19 +15,32 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.get("/", async (req, res) => {
+app.get('/', async (req, res) => {
     console.log(process.env.OPENAI_API_KEY)
     res.status(200).send({
-        message: "Hello from Codeai"
+        message: 'Hello from Codeai'
     })
 })
 
-app.post("/", async (req, res) => {
+app.post('/', async (req, res) => {
     try {
         const prompt = req.body.prompt
-        console.log(prompt)
-        const response = await openai.createCompletion({
-            model: "text-davinci-003",
+        let response
+
+        if (prompt.includes('img:')) {
+            response = await openai.createImage({
+                prompt: prompt.replace('img:', ''),
+                n: 8,
+                size: '256x256'
+            })
+
+            return res.status(200).send({
+                bot: response.data.data
+            })
+        }
+
+        response = await openai.createCompletion({
+            model: 'text-davinci-003',
             prompt: `${prompt}`,
             temperature: 0,
             max_tokens: 300,
@@ -45,6 +58,8 @@ app.post("/", async (req, res) => {
     }
 })
 
+app.post('/image', (req, res) => {})
+
 app.listen(5000, () =>
-    console.log("Server is running on port http://localhost:5000")
+    console.log('Server is running on port http://localhost:5000')
 )

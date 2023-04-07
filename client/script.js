@@ -22,11 +22,13 @@ function highlightKeywords(text) {
         'class',
         'const',
         'let',
-        'var'
+        'var',
+        'def'
     ]
     const words = text.split(' ')
     const highlightedWords = words.map(word => {
         if (keywords.includes(word)) {
+            console.log('includes!')
             return `<span class="keyword">${word}</span>`
         } else {
             return word
@@ -130,7 +132,8 @@ const handleSubmit = async e => {
     loader(messageDiv)
 
     // fetch data from server -> bot's response
-    const response = await fetch('https://codeai-5wxe.onrender.com', {
+    // http://localhost:5000 || https://codeai-5wxe.onrender.com
+    const response = await fetch('http://localhost:5000', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -153,6 +156,21 @@ const handleSubmit = async e => {
     messageDiv.innerHTML = ' '
 
     if (response.ok) {
+        if (prompt.includes('img:')) {
+            const imgRes = await response.json()
+            console.log(imgRes)
+
+            for (let i = 0; i < imgRes.bot.length; i++) {
+                const img = document.createElement('img')
+                messageDiv.classList.add('generated-imgs')
+                img.classList.add('img-gen')
+                img.src = imgRes.bot[i].url
+                messageDiv.appendChild(img)
+            }
+
+            return
+        }
+
         const data = await response.json()
         const parsedData = data.bot.trim()
 
@@ -160,6 +178,7 @@ const handleSubmit = async e => {
             const codeContainer = document.createElement('code')
             codeContainer.innerHTML = parsedData
             messageDiv.innerHTML = ''
+            messageDiv.style = 'border-radius: 5px'
 
             messageDiv.classList.add('hljs')
 
@@ -174,6 +193,8 @@ const handleSubmit = async e => {
         alert(err)
     }
 }
+
+/* Listeners */
 
 form.addEventListener('submit', handleSubmit)
 form.addEventListener('keyup', e => {
