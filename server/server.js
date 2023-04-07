@@ -25,8 +25,16 @@ const nImagesObj = {
     ':ten': 10
 }
 
+const corsOpts = {
+    origin: '*',
+
+    methods: ['GET', 'POST'],
+
+    allowedHeaders: ['Content-Type']
+}
+
 const app = express()
-app.use(cors())
+app.use(cors(corsOpts))
 app.use(express.json())
 
 app.get('/', async (req, res) => {
