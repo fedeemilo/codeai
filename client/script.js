@@ -54,8 +54,6 @@ function typeCodeText(element, text) {
     let interval = setInterval(() => {
         if (index < text.length) {
             element.innerHTML += text.charAt(index)
-            chatContainer.scrollTop =
-                chatContainer.scrollHeight + element.scrollHeight
             index++
             element.innerHTML = highlightKeywords(element.innerText)
         } else {
@@ -72,8 +70,6 @@ function typeRegularText(element, text) {
     let interval = setInterval(() => {
         if (index < text.length) {
             element.innerHTML += text.charAt(index)
-            chatContainer.scrollTop =
-                chatContainer.scrollHeight + element.scrollHeight
             index++
         } else {
             clearInterval(interval)
